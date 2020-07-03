@@ -26,6 +26,7 @@ Route::group(['prefix'=>'contact','middleware'=>'auth'], function () {
     Route::get('index', 'ContactFormController@index')->name('contact.index');
     //nameをつけるとviewsを書くときに楽
     Route::get('create', 'ContactFormController@create')->name('contact.create');
+    Route::post('store', 'ContactFormController@store')->name('contact.store');
 });
 
 //REST

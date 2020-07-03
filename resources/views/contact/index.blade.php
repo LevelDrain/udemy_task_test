@@ -20,6 +20,10 @@
                         </button>
                     </form>
                     上島を呼ぶ
+                    @foreach ($contacts as $contact)
+                    {{$contact->id}}
+                    {{$contact->your_name}}
+                    @endforeach
                 </div>
             </div>
         </div>

@@ -15,7 +15,8 @@
                     @endif
 
                     上島「新規登録はこちらー」
-                    <form action="" method="post">
+                    <form action="{{ route('contact.store') }}" method="post">
+                    @csrf
                         氏名：
                         <input type="text" name="your_name" id="">
                         <br>
@@ -29,8 +30,8 @@
                         <input type="url" name="url" id="">
                         <br>
                         性別：
-                        <input type="radio" name="gender" id="">
-                        <input type="radio" name="gender" id="">
+                        男性<input type="radio" name="gender" value="0" id="">
+                        ｜女性<input type="radio" name="gender" value="1" id="">
                         <br>
                         年齢：
                         <select name="age" id="">
