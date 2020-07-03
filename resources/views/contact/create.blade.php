@@ -15,6 +15,7 @@
                     @endif
 
                     上島「新規登録はこちらー」
+                    <hr>
                     <form action="{{ route('contact.store') }}" method="post">
                     @csrf
                         氏名：

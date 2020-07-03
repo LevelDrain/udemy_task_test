@@ -22,10 +22,11 @@ class ContactFormController extends Controller
 
         //クエリビルダ
         $contacts=DB::table('contact_forms')
-        ->select('id', 'your_name')
+        ->select('id', 'your_name', 'title', 'created_at')
+        ->orderBy('created_at', 'desc')
         ->get();
 
-        dd($contacts);
+        //dd($contacts);
 
         //書き出し先
         return view('contact.index', compact('contacts'));//$←コレ要らない
@@ -75,7 +76,38 @@ class ContactFormController extends Controller
      */
     public function show($id)
     {
-        //
+        //Eloquent
+        //コントローラーでDBの数字を変換、viewに変数として渡す
+        $contact=ContactForm::find($id);
+        if ($contact->gender===0) {
+            $gender='男性';
+        } elseif ($contact->gender===1) {
+            $gender='女性';
+        }
+
+        switch ($contact->age) {
+            case 1:
+                $age='～ 19歳';
+            break;
+            case 2:
+                $age='20歳 ～ 29歳';
+            break;
+            case 3:
+                $age='30歳 ～ 39歳';
+            break;
+            case 4:
+                $age='40歳 ～ 49歳';
+            break;
+            case 5:
+                $age='50歳 ～ 59歳';
+            break;
+            case 6:
+                $age='60歳 ～';
+            break;
+        }
+
+        return view('contact.show', compact('contact', 'gender', 'age'));
+        //compact：変数を複数渡す
     }
 
     /**
@@ -87,6 +119,9 @@ class ContactFormController extends Controller
     public function edit($id)
     {
         //
+        $contact=ContactForm::find($id);
+
+        return view('contact.edit', compact('contact'));
     }
 
     /**

@@ -15,7 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-//get('url', 'コントローラー@フロントエンドやCRUD呼び出しのメソッド')
+//get('url', 'コントローラー@DB操作とbladeを呼び出しているメソッド')
 Route::get('tests/test', 'TestController@index');
 
 // Route::get('contact/show', 'ContactFormController@index');
@@ -27,6 +27,8 @@ Route::group(['prefix'=>'contact','middleware'=>'auth'], function () {
     //nameをつけるとviewsを書くときに楽
     Route::get('create', 'ContactFormController@create')->name('contact.create');
     Route::post('store', 'ContactFormController@store')->name('contact.store');
+    Route::get('show/{id}', 'ContactFormController@show')->name('contact.show');
+    Route::get('edit/{id}', 'ContactFormController@edit')->name('contact.edit');
 });
 
 //REST
