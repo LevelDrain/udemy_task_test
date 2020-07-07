@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Models\ContactForm;
 use Illuminate\Support\Facades\DB;
+use App\Services\CheckFormData;
+use App\Http\Requests\StoreContactForm;
 
 class ContactFormController extends Controller
 {
@@ -21,15 +23,15 @@ class ContactFormController extends Controller
         //dd($contacts);
 
         //クエリビルダ
-        $contacts=DB::table('contact_forms')
-        ->select('id', 'your_name', 'title', 'created_at')
-        ->orderBy('created_at', 'desc')
-        ->get();
+        $contacts = DB::table('contact_forms')
+            ->select('id', 'your_name', 'title', 'created_at')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         //dd($contacts);
 
         //書き出し先
-        return view('contact.index', compact('contacts'));//$←コレ要らない
+        return view('contact.index', compact('contacts')); //$←コレ要らない
     }
 
     /**
@@ -50,15 +52,17 @@ class ContactFormController extends Controller
      */
     public function store(Request $request)
     {
+        //createを担当するメソッド
+
         $contact = new ContactForm;
         //DI $requestインスタンスが引数
-        $contact->your_name=$request->input('your_name');
-        $contact->title=$request->input('title');
-        $contact->email=$request->input('email');
-        $contact->url=$request->input('url');
-        $contact->gender=$request->input('gender');
-        $contact->age=$request->input('age');
-        $contact->contact=$request->input('contact');
+        $contact->your_name = $request->input('your_name');
+        $contact->title = $request->input('title');
+        $contact->email = $request->input('email');
+        $contact->url = $request->input('url');
+        $contact->gender = $request->input('gender');
+        $contact->age = $request->input('age');
+        $contact->contact = $request->input('contact');
 
         $contact->save();
         return redirect('contact/index');
@@ -78,33 +82,10 @@ class ContactFormController extends Controller
     {
         //Eloquent
         //コントローラーでDBの数字を変換、viewに変数として渡す
-        $contact=ContactForm::find($id);
-        if ($contact->gender===0) {
-            $gender='男性';
-        } elseif ($contact->gender===1) {
-            $gender='女性';
-        }
+        $contact = ContactForm::find($id);
+        $gender = CheckFormData::checkGender($contact);
+        $age = CheckFormData::checkAge($contact);
 
-        switch ($contact->age) {
-            case 1:
-                $age='～ 19歳';
-            break;
-            case 2:
-                $age='20歳 ～ 29歳';
-            break;
-            case 3:
-                $age='30歳 ～ 39歳';
-            break;
-            case 4:
-                $age='40歳 ～ 49歳';
-            break;
-            case 5:
-                $age='50歳 ～ 59歳';
-            break;
-            case 6:
-                $age='60歳 ～';
-            break;
-        }
 
         return view('contact.show', compact('contact', 'gender', 'age'));
         //compact：変数を複数渡す
@@ -119,7 +100,7 @@ class ContactFormController extends Controller
     public function edit($id)
     {
         //
-        $contact=ContactForm::find($id);
+        $contact = ContactForm::find($id);
 
         return view('contact.edit', compact('contact'));
     }
@@ -133,7 +114,20 @@ class ContactFormController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //今あるものを使う
+        $contact = ContactForm::find($id);
+
+        $contact->your_name = $request->input('your_name');
+        $contact->title = $request->input('title');
+        $contact->email = $request->input('email');
+        $contact->url = $request->input('url');
+        $contact->gender = $request->input('gender');
+        $contact->age = $request->input('age');
+        $contact->contact = $request->input('contact');
+
+        $contact->save();
+
+        return redirect('contact/index');
     }
 
     /**
@@ -145,5 +139,9 @@ class ContactFormController extends Controller
     public function destroy($id)
     {
         //
+        $contact = ContactForm::find($id);
+        $contact->delete();
+
+        return redirect('contact/index');
     }
 }
