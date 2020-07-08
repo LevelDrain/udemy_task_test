@@ -116,6 +116,8 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'email'=>'メールアドレス'//追記
+    ],
 
 ];
